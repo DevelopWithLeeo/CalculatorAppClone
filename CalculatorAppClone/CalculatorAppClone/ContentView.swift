@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.dismiss) private var dismiss
+    
+    @State private var displayExpression: String = "0"
     @State private var showHistory = false
     
     // \(dailyFixed.formatted(.number.grouping(.automatic)))
@@ -22,7 +24,7 @@ struct ContentView: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        Text("33,332,313")
+                        Text(displayExpression)
                             .padding()
                             .font(.system(size: 70))
                             .foregroundStyle(.white)
@@ -30,14 +32,28 @@ struct ContentView: View {
                     
                     HStack {
                         Button {
-                            //C
+                            if displayExpression != "0" {
+                                displayExpression.removeLast()
+                                if displayExpression.isEmpty {
+                                    displayExpression = "0"
+                                }
+                            }
                         } label: {
-                            Image(systemName: "delete.backward")
-                                .frame(width: 88, height: 88)
-                                .font(.largeTitle)
-                                .foregroundStyle(.white)
-                                .background(Color("FunctionGray"))
-                                .clipShape(Circle())
+                            if displayExpression == "0" {
+                                Text("AC")
+                                    .frame(width: 88, height: 88)
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.white)
+                                    .background(Color("FunctionGray"))
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "delete.backward")
+                                    .frame(width: 88, height: 88)
+                                    .font(.largeTitle)
+                                    .foregroundStyle(.white)
+                                    .background(Color("FunctionGray"))
+                                    .clipShape(Circle())
+                            }
                         }
                         Button {
                             //C
@@ -51,7 +67,7 @@ struct ContentView: View {
                         }
                         
                         Button {
-                            //C
+                            
                         } label: {
                             Image(systemName: "percent")
                                 .frame(width: 88, height: 88)
@@ -62,7 +78,15 @@ struct ContentView: View {
                         }
                         
                         Button {
-                            //C
+                            if displayExpression.suffix(2) == "×-" || displayExpression.suffix(2) == "÷-" {
+                                displayExpression.removeLast(2)
+                                displayExpression += "÷"
+                            } else if let lastChar = displayExpression.last, ["+", "-", "×", "÷"].contains(lastChar) {
+                                displayExpression.removeLast()
+                                displayExpression += "÷"
+                            } else {
+                                displayExpression += "÷"
+                            }
                         } label: {
                             Image(systemName: "divide")
                                 .frame(width: 88, height: 88)
@@ -74,11 +98,19 @@ struct ContentView: View {
                     }
                     
                     HStack {
-                        NumberPadView(number: "7")
-                        NumberPadView(number: "8")
-                        NumberPadView(number: "9")
+                        NumberPadView(number: "7", displayExpression: $displayExpression)
+                        NumberPadView(number: "8", displayExpression: $displayExpression)
+                        NumberPadView(number: "9", displayExpression: $displayExpression)
                         Button {
-                            //C
+                            if displayExpression.suffix(2) == "×-" || displayExpression.suffix(2) == "÷-" {
+                                displayExpression.removeLast(2)
+                                displayExpression += "×"
+                            } else if let lastChar = displayExpression.last, ["+", "-", "×", "÷"].contains(lastChar) {
+                                displayExpression.removeLast()
+                                displayExpression += "×"
+                            } else {
+                                displayExpression += "×"
+                            }
                         } label: {
                             Image(systemName: "multiply")
                                 .frame(width: 88, height: 88)
@@ -90,11 +122,21 @@ struct ContentView: View {
                     }
                     
                     HStack {
-                        NumberPadView(number: "4")
-                        NumberPadView(number: "5")
-                        NumberPadView(number: "6")
+                        NumberPadView(number: "4", displayExpression: $displayExpression)
+                        NumberPadView(number: "5", displayExpression: $displayExpression)
+                        NumberPadView(number: "6", displayExpression: $displayExpression)
                         Button {
-                            //C
+                            if displayExpression.suffix(2) == "×-" || displayExpression.suffix(2) == "÷-" {
+                            } else if let lastChar = displayExpression.last {
+                                if ["×", "÷"].contains(lastChar) {
+                                    displayExpression += "-"
+                                } else if ["+", "-", "×", "÷"].contains(lastChar) {
+                                    displayExpression.removeLast()
+                                    displayExpression += "-"
+                                } else {
+                                    displayExpression += "-"
+                                }
+                            }
                         } label: {
                             Image(systemName: "minus")
                                 .frame(width: 88, height: 88)
@@ -106,11 +148,19 @@ struct ContentView: View {
                     }
                     
                     HStack {
-                        NumberPadView(number: "1")
-                        NumberPadView(number: "2")
-                        NumberPadView(number: "3")
+                        NumberPadView(number: "1", displayExpression: $displayExpression)
+                        NumberPadView(number: "2", displayExpression: $displayExpression)
+                        NumberPadView(number: "3", displayExpression: $displayExpression)
                         Button {
-                            //C
+                            if displayExpression.suffix(2) == "×-" || displayExpression.suffix(2) == "÷-" {
+                                displayExpression.removeLast(2)
+                                displayExpression += "+"
+                            } else if let lastChar = displayExpression.last, ["+", "-", "×", "÷"].contains(lastChar) {
+                                displayExpression.removeLast()
+                                displayExpression += "+"
+                            } else {
+                                displayExpression += "+"
+                            }
                         } label: {
                             Image(systemName: "plus")
                                 .frame(width: 88, height: 88)
@@ -125,14 +175,14 @@ struct ContentView: View {
                         Button {
                             //C
                         } label: {
-                            Text("ㅁ")
+                            Image(systemName: "candybarphone")
                                 .frame(width: 88, height: 88)
                                 .font(.largeTitle)
                                 .foregroundStyle(.white)
                                 .background(.darkGray)
                                 .clipShape(Circle())
                         }
-                        NumberPadView(number: "0")
+                        NumberPadView(number: "0", displayExpression: $displayExpression)
                         Button {
                             //C
                         } label: {
@@ -182,9 +232,15 @@ struct ContentView: View {
 
 struct NumberPadView: View {
     let number: String
+    @Binding var displayExpression: String
     
     var body: some View {
         Button {
+            if displayExpression == "0" {
+                displayExpression = number
+            } else {
+                displayExpression += number
+            }
             print("\(number)")
         } label: {
             Text(number)
