@@ -12,6 +12,7 @@ struct ContentView: View {
     
     @State private var displayExpression: String = "0"
     @State private var showHistory = false
+    @State private var result: Double = 0
     
     // \(dailyFixed.formatted(.number.grouping(.automatic)))
     
@@ -21,10 +22,11 @@ struct ContentView: View {
                 Color.black.ignoresSafeArea()
                 
                 VStack {
+                    
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(displayExpression)
+                        Text(result == 0 ? displayExpression : String(result))
                             .padding()
                             .font(.system(size: 70))
                             .foregroundStyle(.white)
@@ -194,7 +196,16 @@ struct ContentView: View {
                                 .clipShape(Circle())
                         }
                         Button {
-                            //C
+                            let numbers = displayExpression.split(separator: "+")
+//                            print(displayExpression.split(separator: "+"))
+                            
+                            for i in numbers {
+                                if let value = Double(i) {
+                                    result += value
+                                }
+                            }
+                            print(result)
+                            
                         } label: {
                             Image(systemName: "equal")
                                 .frame(width: 88, height: 88)
@@ -214,9 +225,7 @@ struct ContentView: View {
                         Image(systemName: "list.bullet")
                             .foregroundStyle(.orange)
                     }
-                    
                 }
-                
             }
             .sheet(isPresented: $showHistory) {
                 NavigationStack {
@@ -272,6 +281,23 @@ struct MenuView: View {
                     .foregroundStyle(.orange)
             }
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .bottomBar) {
+                Button {
+                    //
+                } label: {
+                    Text("편집")
+                        .foregroundStyle(.orange)
+                }
+                Button {
+                    //
+                } label: {
+                    Text("지우기")
+                        .foregroundStyle(.red)
+                }
+            }
+        }
+        .background(.gray)
     }
 }
 
