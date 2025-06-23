@@ -20,18 +20,23 @@ struct ContentView: View {
         NavigationStack {
             ZStack {
                 Color.black.ignoresSafeArea()
-                
                 VStack {
-                    
                     Spacer()
                     HStack {
                         Spacer()
-                        Text(result == 0 ? displayExpression : String(result))
-                            .padding()
-                            .font(.system(size: 70))
-                            .foregroundStyle(.white)
+                        VStack(alignment: .trailing) {
+                            if result != 0 {
+                                Text(displayExpression)
+                                    .padding(.trailing, 16)
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(.gray)
+                            }
+                            Text(result == 0 ? displayExpression : String(result))
+                                .padding(.trailing, 16)
+                                .font(.system(size: 70))
+                                .foregroundStyle(.white)
+                        }
                     }
-                    
                     HStack {
                         Button {
                             if displayExpression != "0" {
@@ -40,8 +45,12 @@ struct ContentView: View {
                                     displayExpression = "0"
                                 }
                             }
+                            if result != 0 {
+                                result = 0
+                                displayExpression = "0"
+                            }
                         } label: {
-                            if displayExpression == "0" {
+                            if displayExpression == "0" || result != 0 {
                                 Text("AC")
                                     .frame(width: 88, height: 88)
                                     .font(.largeTitle)
@@ -69,7 +78,7 @@ struct ContentView: View {
                         }
                         
                         Button {
-                            
+                            //
                         } label: {
                             Image(systemName: "percent")
                                 .frame(width: 88, height: 88)
@@ -174,8 +183,22 @@ struct ContentView: View {
                     }
                     
                     HStack {
-                        Button {
-                            //C
+                        Menu {
+                            Button {
+                                print("수학 메모")
+                            } label: {
+                                Text("수학 메모")
+                            }
+                            Button {
+                                print("공학용")
+                            } label: {
+                                Text("공학용")
+                            }
+                            Button {
+                                print("기본")
+                            } label: {
+                                Text("기본")
+                            }
                         } label: {
                             Image(systemName: "candybarphone")
                                 .frame(width: 88, height: 88)
@@ -197,8 +220,7 @@ struct ContentView: View {
                         }
                         Button {
                             let numbers = displayExpression.split(separator: "+")
-//                            print(displayExpression.split(separator: "+"))
-                            
+
                             for i in numbers {
                                 if let value = Double(i) {
                                     result += value
@@ -271,7 +293,7 @@ struct MenuView: View {
             VStack {
                 Text("테스트")
             }
-                        
+            
         }
         .toolbar {
             Button {
